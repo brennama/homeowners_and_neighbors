@@ -4,6 +4,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+//steps to complete problem
+//write data to file and read data from that file
+//parse data so we can run calculations on it
+//calculate dot product
+//use dot product to assign a fit score for each person to each neighborhood
+//sort everyone into the neighhoods that are the closest match
+//make sure there is an equal number of people for each neighborhood
+
+//issues to solve
+//unsure of how neighborhood preference is weighted in the assignment of neighborhoods
+//maybe can use sample input and output to deduce the exact sorting parameters
+
 void main() {
   runApp(
     MaterialApp(
@@ -90,7 +102,7 @@ class _HomeownersAppState extends State<HomeownersApp> {
                   builder: (context) {
                     String enteredData = '';
                     return AlertDialog(
-                      title: Text('Edit Data'),
+                      title: const Text('Edit Data'),
                       content: TextField(
                         onChanged: (value) {
                           enteredData = value;
@@ -102,14 +114,14 @@ class _HomeownersAppState extends State<HomeownersApp> {
                             Navigator.of(context).pop();
                             _saveData(enteredData);
                           },
-                          child: Text('Save'),
+                          child: const Text('Save'),
                         ),
                       ],
                     );
                   },
                 );
               },
-              child: Text('Edit Data'),
+              child: const Text('Edit Data'),
             ),
           ],
         ),
