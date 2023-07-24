@@ -1,20 +1,6 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-
-//steps to complete problem
-//write data to file and read data from that file
-//parse data so we can run calculations on it
-//calculate dot product
-//use dot product to assign a fit score for each person to each neighborhood
-//sort everyone into the neighhoods that are the closest match
-//make sure there is an equal number of people for each neighborhood
-
-//issues to solve
-//unsure of how neighborhood preference is weighted in the assignment of neighborhoods
-//maybe can use sample input and output to deduce the exact sorting parameters
+import 'dart:io';
+import 'data_storage.dart';
 
 void main() {
   runApp(
@@ -23,33 +9,6 @@ void main() {
       home: HomeownersApp(storage: DataStorage()),
     ),
   );
-}
-
-class DataStorage {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/data.txt');
-  }
-
-  Future<String> readData() async {
-    try {
-      final file = await _localFile;
-      final contents = await file.readAsString();
-      return contents;
-    } catch (e) {
-      return '';
-    }
-  }
-
-  Future<File> writeData(String data) async {
-    final file = await _localFile;
-    return file.writeAsString(data);
-  }
 }
 
 class HomeownersApp extends StatefulWidget {
@@ -62,6 +21,7 @@ class HomeownersApp extends StatefulWidget {
 }
 
 class _HomeownersAppState extends State<HomeownersApp> {
+  final TextEditingController _textEditingController = TextEditingController();
   String _data = '';
 
   @override
@@ -70,16 +30,19 @@ class _HomeownersAppState extends State<HomeownersApp> {
     widget.storage.readData().then((value) {
       setState(() {
         _data = value;
+        _textEditingController.text =
+            _data;
       });
     });
   }
 
-  Future<File> _saveData(String newData) {
+  Future<File> _saveData(String newData) async {
     setState(() {
       _data = newData;
     });
 
-    return widget.storage.writeData(newData);
+    return widget.storage
+        .writeData(newData);
   }
 
   @override
@@ -100,19 +63,21 @@ class _HomeownersAppState extends State<HomeownersApp> {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    String enteredData = '';
                     return AlertDialog(
                       title: const Text('Edit Data'),
                       content: TextField(
+                        controller:
+                            _textEditingController,
                         onChanged: (value) {
-                          enteredData = value;
                         },
+                        maxLines: null,
                       ),
                       actions: [
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _saveData(enteredData);
+                            _saveData(_textEditingController
+                                .text); /
                           },
                           child: const Text('Save'),
                         ),
