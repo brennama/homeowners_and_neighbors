@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:homeowners_and_neighborhoods/parse_data.dart';
 import 'dart:io';
 import 'data_storage.dart';
+import 'dot_calculator.dart';
 
 void main() {
   runApp(
@@ -9,6 +11,20 @@ void main() {
       home: HomeownersApp(storage: DataStorage()),
     ),
   );
+  parseInput(input);
+
+  for (final neighborhood in setN) {
+    for (final homeBuyer in setH) {
+      try {
+        int result = calculateDotProduct(neighborhood.scores.values.toList(),
+            homeBuyer.goals.values.toList());
+        print(
+            "Dot Product for ${neighborhood.id} and ${homeBuyer.id}: $result");
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+  }
 }
 
 class HomeownersApp extends StatefulWidget {
@@ -30,8 +46,7 @@ class _HomeownersAppState extends State<HomeownersApp> {
     widget.storage.readData().then((value) {
       setState(() {
         _data = value;
-        _textEditingController.text =
-            _data;
+        _textEditingController.text = _data;
       });
     });
   }
@@ -41,8 +56,7 @@ class _HomeownersAppState extends State<HomeownersApp> {
       _data = newData;
     });
 
-    return widget.storage
-        .writeData(newData);
+    return widget.storage.writeData(newData);
   }
 
   @override
@@ -66,18 +80,15 @@ class _HomeownersAppState extends State<HomeownersApp> {
                     return AlertDialog(
                       title: const Text('Edit Data'),
                       content: TextField(
-                        controller:
-                            _textEditingController,
-                        onChanged: (value) {
-                        },
+                        controller: _textEditingController,
+                        onChanged: (value) {},
                         maxLines: null,
                       ),
                       actions: [
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _saveData(_textEditingController
-                                .text); /
+                            _saveData(_textEditingController.text);
                           },
                           child: const Text('Save'),
                         ),
