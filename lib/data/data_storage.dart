@@ -8,14 +8,19 @@ class DataStorage {
     return directory.path;
   }
 
-  Future<File> get _localFile async {
+  Future<File> get _inputFile async {
     final path = await _localPath;
-    return File('$path/data.txt');
+    return File('$path/input.txt');
   }
 
-  Future<String> readData() async {
+  Future<File> get _outputFile async {
+    final path = await _localPath;
+    return File('$path/output.txt');
+  }
+
+  Future<String> readInput() async {
     try {
-      final file = await _localFile;
+      final file = await _inputFile;
       final contents = await file.readAsString();
       return contents;
     } catch (e) {
@@ -23,8 +28,23 @@ class DataStorage {
     }
   }
 
-  Future<File> writeData(String data) async {
-    final file = await _localFile;
+  Future<String> readOutput() async {
+    try {
+      final file = await _outputFile;
+      final contents = await file.readAsString();
+      return contents;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Future<File> writeInput(String data) async {
+    final file = await _inputFile;
+    return file.writeAsString(data);
+  }
+
+  Future<File> writeOutput(String data) async {
+    final file = await _outputFile;
     return file.writeAsString(data);
   }
 }

@@ -1,3 +1,5 @@
+import 'data_storage.dart';
+
 class DotProductData {
   final String neighborhood;
   final String homeowner;
@@ -67,6 +69,7 @@ Dot Product for N1 and H0 17 N2>N0>N1
   for (int i = 0; i < data.length; i++) {
     String homeowner = data[i].homeowner;
     String neighborhood = data[i].neighborhood;
+    int dotProduct = data[i].dotProduct; // Get the dot product score
 
     // Check if the homeowner is already present in the 'result' list
     bool homeownerAlreadyAssigned =
@@ -83,14 +86,14 @@ Dot Product for N1 and H0 17 N2>N0>N1
 
     // If the homeowner's preference matches the neighborhood and it satisfies the conditions, add them to the 'result' list
     if (data[i].neighborhood == data[i].preferences[0]) {
-      result.add('$neighborhood $homeowner');
+      result.add('$neighborhood $homeowner $dotProduct');
       print('$homeowner has been assigned to $neighborhood');
     } else if (data[i].neighborhood == data[i].preferences[1]) {
       // Check if the preferred neighborhood has reached its limit, in which case assign to the second preference
       int preferredNeighborhoodCount =
           result.where((item) => item.contains(data[i].preferences[0])).length;
       if (preferredNeighborhoodCount >= maxHomeowners) {
-        result.add('$neighborhood $homeowner');
+        result.add('$neighborhood $homeowner $dotProduct');
         print('$homeowner has been assigned to $neighborhood');
       }
     } else if (data[i].neighborhood == data[i].preferences[2]) {
@@ -101,11 +104,12 @@ Dot Product for N1 and H0 17 N2>N0>N1
           result.where((item) => item.contains(data[i].preferences[1])).length;
       if (preferredNeighborhoodCount >= maxHomeowners &&
           secondPreferenceCount >= maxHomeowners) {
-        result.add('$neighborhood $homeowner');
+        result.add('$neighborhood $homeowner $dotProduct');
         print('$homeowner has been assigned to $neighborhood');
       }
     }
   }
+  printResults();
 }
 
 List<DotProductData> parseDotProductData(String input) {
@@ -142,4 +146,34 @@ List<DotProductData> parseDotProductData(String input) {
   }
 
   return result;
+}
+
+void printResults() {
+  // Create a map to group homeowners by their assigned neighborhoods
+  final Map<String, List<String>> neighborhoodsMap = {};
+
+  result.sort((a, b) {
+    final aNeighborhood = a.split(' ')[0];
+    final bNeighborhood = b.split(' ')[0];
+    return aNeighborhood.compareTo(bNeighborhood);
+  });
+
+  // Loop through the result list and group homeowners by neighborhoods
+  for (var assignment in result) {
+    final parts = assignment.split(' ');
+    final neighborhood = parts[0];
+    final homeowner = parts[1];
+    final dotProduct = parts[2]; // Extract dot product score from the result
+
+    neighborhoodsMap
+        .putIfAbsent(neighborhood, () => [])
+        .add('$homeowner($dotProduct)');
+  }
+
+  // Print the assignments for each neighborhood
+  for (var entry in neighborhoodsMap.entries) {
+    final neighborhood = entry.key;
+    final homeowners = entry.value.join(' ');
+    print('$neighborhood: $homeowners');
+  }
 }
