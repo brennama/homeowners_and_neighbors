@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:homeowners_and_neighborhoods/parse_data.dart';
+import 'package:homeowners_and_neighborhoods/data/parse_data.dart';
 import 'dart:io';
-import 'data_storage.dart';
+import 'data/data_storage.dart';
 import 'dot_calculator.dart';
 
 void main() {
