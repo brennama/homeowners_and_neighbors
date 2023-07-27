@@ -16,51 +16,10 @@ class DotProductData {
 
 final List<String> result = [];
 
-void main() {
-  //update this to be data read from file,
-  String input = """
-    Dot Product for N0 and H6 188 N2>N1>N0
-Dot Product for N0 and H3 171 N2>N0>N1
-Dot Product for N0 and H5 161 N0>N2>N1
-Dot Product for N0 and H11 154 N0>N1>N2
-Dot Product for N0 and H2 128 N0>N2>N1
-Dot Product for N2 and H6 128 N2>N1>N0
-Dot Product for N0 and H4 122 N0>N2>N1
-Dot Product for N2 and H3 120 N2>N0>N1
-Dot Product for N0 and H10 120 N0>N2>N1
-Dot Product for N0 and H1 119 N0>N2>N1
-Dot Product for N2 and H5 112 N0>N2>N1
-Dot Product for N2 and H11 108 N0>N1>N2
-Dot Product for N0 and H7 106 N2>N1>N0
-Dot Product for N2 and H4 106 N0>N2>N1
-Dot Product for N0 and H0 104 N2>N0>N1
-Dot Product for N0 and H8 100 N1>N0>N2
-Dot Product for N0 and H9 94 N1>N2>N0
-Dot Product for N2 and H9 86 N1>N2>N0
-Dot Product for N2 and H10 86 N0>N2>N1
-Dot Product for N2 and H0 83 N2>N0>N1
-Dot Product for N2 and H8 80 N1>N0>N2
-Dot Product for N2 and H7 75 N2>N1>N0
-Dot Product for N2 and H1 74 N0>N2>N1
-Dot Product for N2 and H2 68 N0>N2>N1
-Dot Product for N1 and H6 31 N2>N1>N0
-Dot Product for N1 and H3 31 N2>N0>N1
-Dot Product for N1 and H11 27 N0>N1>N2
-Dot Product for N1 and H5 26 N0>N2>N1
-Dot Product for N1 and H4 23 N0>N2>N1
-Dot Product for N1 and H9 23 N1>N2>N0
-Dot Product for N1 and H8 21 N1>N0>N2
-Dot Product for N1 and H10 21 N0>N2>N1
-Dot Product for N1 and H7 20 N2>N1>N0
-Dot Product for N1 and H1 18 N0>N2>N1
-Dot Product for N1 and H2 18 N0>N2>N1
-Dot Product for N1 and H0 17 N2>N0>N1
-  """;
+//update this to be data read from file,
 
+String assignHomeowners(String input, double maxHomeowners) {
   List<DotProductData> data = parseDotProductData(input);
-
-  //update this to not be hard coded but instead be number of homeowners divided by number of neighborhoods
-  double maxHomeowners = 12 / 3;
 
   // Sort the data list by the highest dot product number
   data.sort((a, b) => b.dotProduct.compareTo(a.dotProduct));
@@ -109,7 +68,7 @@ Dot Product for N1 and H0 17 N2>N0>N1
       }
     }
   }
-  printResults();
+  return formatResults();
 }
 
 List<DotProductData> parseDotProductData(String input) {
@@ -148,8 +107,7 @@ List<DotProductData> parseDotProductData(String input) {
   return result;
 }
 
-void printResults() {
-  // Create a map to group homeowners by their assigned neighborhoods
+String formatResults() {
   final Map<String, List<String>> neighborhoodsMap = {};
 
   result.sort((a, b) {
@@ -158,22 +116,23 @@ void printResults() {
     return aNeighborhood.compareTo(bNeighborhood);
   });
 
-  // Loop through the result list and group homeowners by neighborhoods
   for (var assignment in result) {
     final parts = assignment.split(' ');
     final neighborhood = parts[0];
     final homeowner = parts[1];
-    final dotProduct = parts[2]; // Extract dot product score from the result
+    final dotProduct = parts[2];
 
     neighborhoodsMap
         .putIfAbsent(neighborhood, () => [])
         .add('$homeowner($dotProduct)');
   }
 
-  // Print the assignments for each neighborhood
+  String formattedOutput = '';
   for (var entry in neighborhoodsMap.entries) {
     final neighborhood = entry.key;
     final homeowners = entry.value.join(' ');
-    print('$neighborhood: $homeowners');
+    formattedOutput += '$neighborhood: $homeowners\n';
   }
+
+  return formattedOutput;
 }
