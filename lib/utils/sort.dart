@@ -31,11 +31,16 @@ String assignHomeowners(String input, double maxHomeowners) {
   // Sort the data list by the highest dot product number
   data.sort((a, b) => b.dotProduct.compareTo(a.dotProduct));
 
+  Map<String, int> neighborhoodCounts = {};
+
   // Loop through the sorted data and assign homeowners to neighborhoods
   for (int i = 0; i < data.length; i++) {
     String homeowner = data[i].homeowner;
     String neighborhood = data[i].neighborhood;
     int dotProduct = data[i].dotProduct; // Get the dot product score
+
+    int maxNeighborhoodHomeowners = maxHomeowners.round();
+    int currentNeighborhoodHomeowners = neighborhoodCounts[neighborhood] ?? 0;
 
     // Check if the homeowner is already present in the 'result' list
     bool homeownerAlreadyAssigned =
@@ -43,8 +48,7 @@ String assignHomeowners(String input, double maxHomeowners) {
 
     // Check if the neighborhood is already at its limit in the 'result' list
     bool neighborhoodFull =
-        result.where((item) => item.contains(neighborhood)).length >=
-            maxHomeowners;
+        currentNeighborhoodHomeowners >= maxNeighborhoodHomeowners;
 
     if (homeownerAlreadyAssigned || neighborhoodFull) {
       continue; // Skip assigning this homeowner if already assigned or if the neighborhood is full
@@ -54,24 +58,27 @@ String assignHomeowners(String input, double maxHomeowners) {
     if (data[i].neighborhood == data[i].preferences[0]) {
       result.add('$neighborhood $homeowner $dotProduct');
       print('$homeowner has been assigned to $neighborhood');
+      neighborhoodCounts[neighborhood] = currentNeighborhoodHomeowners + 1;
     } else if (data[i].neighborhood == data[i].preferences[1]) {
       // Check if the preferred neighborhood has reached its limit, in which case assign to the second preference
       int preferredNeighborhoodCount =
-          result.where((item) => item.contains(data[i].preferences[0])).length;
-      if (preferredNeighborhoodCount >= maxHomeowners) {
+          neighborhoodCounts[data[i].preferences[0]] ?? 0;
+      if (preferredNeighborhoodCount >= maxNeighborhoodHomeowners) {
         result.add('$neighborhood $homeowner $dotProduct');
         print('$homeowner has been assigned to $neighborhood');
+        neighborhoodCounts[neighborhood] = currentNeighborhoodHomeowners + 1;
       }
     } else if (data[i].neighborhood == data[i].preferences[2]) {
       // Check if the second preference neighborhood has reached its limit, in which case assign to the third preference
       int preferredNeighborhoodCount =
-          result.where((item) => item.contains(data[i].preferences[0])).length;
+          neighborhoodCounts[data[i].preferences[0]] ?? 0;
       int secondPreferenceCount =
-          result.where((item) => item.contains(data[i].preferences[1])).length;
-      if (preferredNeighborhoodCount >= maxHomeowners &&
-          secondPreferenceCount >= maxHomeowners) {
+          neighborhoodCounts[data[i].preferences[1]] ?? 0;
+      if (preferredNeighborhoodCount >= maxNeighborhoodHomeowners &&
+          secondPreferenceCount >= maxNeighborhoodHomeowners) {
         result.add('$neighborhood $homeowner $dotProduct');
         print('$homeowner has been assigned to $neighborhood');
+        neighborhoodCounts[neighborhood] = currentNeighborhoodHomeowners + 1;
       }
     }
   }

@@ -53,10 +53,43 @@ class _HomeownersAppState extends State<HomeownersApp> {
     _textEditingController.text = _inputData;
 
     // Calculate the output data
-    double maxHomeowners = 12 / 3;
+    int numHomeowners = countHomeowners(inputData);
+    int numNeighborhoods = countNeighborhoods(inputData);
+    double maxHomeowners = numHomeowners / numNeighborhoods;
+
     _outputData = assignHomeowners(_inputData, maxHomeowners);
 
     setState(() {}); // Trigger a rebuild to update the displayed text
+  }
+
+  int countHomeowners(String inputData) {
+    Set<String> homeowners = {};
+    final lines = inputData.split('\n');
+
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i].trim();
+
+      if (line.isNotEmpty && line.startsWith('H')) {
+        homeowners.add(line.split(' ')[1]);
+      }
+    }
+
+    return homeowners.length;
+  }
+
+  int countNeighborhoods(String inputData) {
+    Set<String> neighborhoods = {};
+    final lines = inputData.split('\n');
+
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i].trim();
+
+      if (line.isNotEmpty && line.startsWith('N')) {
+        neighborhoods.add(line.split(' ')[1]);
+      }
+    }
+
+    return neighborhoods.length;
   }
 
   Future<void> _saveData(String newData) async {
@@ -68,7 +101,10 @@ class _HomeownersAppState extends State<HomeownersApp> {
     await widget.storage.writeInput(newData);
 
     // Calculate the new output data with the updated input
-    double maxHomeowners = 12 / 3;
+    int numHomeowners = countHomeowners(newData);
+    int numNeighborhoods = countNeighborhoods(newData);
+    double maxHomeowners = numHomeowners / numNeighborhoods;
+
     _outputData = assignHomeowners(newData, maxHomeowners);
 
     // Write the new output data to output.txt
@@ -108,7 +144,7 @@ class _HomeownersAppState extends State<HomeownersApp> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 500,
+                      height: 400,
                       child: SingleChildScrollView(
                         child: Text(
                           'Dot product scores: \n$_inputData',
