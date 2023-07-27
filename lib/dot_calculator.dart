@@ -10,28 +10,9 @@ int calculateDotProduct(List<int> list1, List<int> list2) {
   return dotProduct;
 }
 
-void main() {
-  List<List<int>> setN = [
-    [7, 7, 10],
-    [2, 1, 1],
-    [7, 6, 4],
-  ];
+class ParsedData {
+  final List<List<int>> setN;
+  final List<List<int>> setH;
 
-  List<List<int>> setH = [
-    [3, 9, 2],
-    [4, 3, 7],
-    [4, 0, 10],
-    [10, 3, 8],
-  ];
-
-  for (int i = 0; i < setN.length; i++) {
-    for (int j = 0; j < setH.length; j++) {
-      try {
-        int result = calculateDotProduct(setN[i], setH[j]);
-        print("Dot Product for N$i and H$j $result");
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-  }
+  ParsedData(this.setN, this.setH);
 }

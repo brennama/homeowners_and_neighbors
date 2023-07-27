@@ -1,12 +1,18 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'data/data_storage.dart';
 import 'package:homeowners_and_neighborhoods/data/sort.dart';
+import 'package:homeowners_and_neighborhoods/data/parse_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   DataStorage dataStorage = DataStorage();
+
+  // Read the input data from input.txt using the DataStorage class
+  String inputData = await dataStorage.readInput();
+
+  // Call the printDotProducts function with the inputData
+  printDotProducts(inputData);
 
   runApp(
     MaterialApp(
