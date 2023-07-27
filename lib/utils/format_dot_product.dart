@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 class DotProductData {
   final String neighborhood;
   final String homeowner;

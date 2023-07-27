@@ -3,7 +3,14 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class DataStorage {
+  final String _storagePath;
+
+  DataStorage([this._storagePath = '']);
+
   Future<String> get _localPath async {
+    if (_storagePath.isNotEmpty) {
+      return _storagePath;
+    }
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }

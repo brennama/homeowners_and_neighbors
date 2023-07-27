@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'data/data_storage.dart';
-import 'package:homeowners_and_neighborhoods/data/sort.dart';
-import 'package:homeowners_and_neighborhoods/data/parse_data.dart';
+import 'utils/data_storage.dart';
+import 'package:homeowners_and_neighborhoods/utils/sort.dart';
+import 'package:homeowners_and_neighborhoods/utils/parse_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +17,7 @@ void main() async {
   runApp(
     MaterialApp(
       title: 'Homeowners and Neighbors',
+      debugShowCheckedModeBanner: false,
       home: HomeownersApp(
         storage: dataStorage,
       ),
@@ -77,6 +78,21 @@ class _HomeownersAppState extends State<HomeownersApp> {
     await _loadData();
   }
 
+  bool _isLoading = false;
+
+  Future<void> showLoading() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Wait for one second
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,57 +100,60 @@ class _HomeownersAppState extends State<HomeownersApp> {
         title: const Text('Homeowners and Neighbors'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 500,
-                child: SingleChildScrollView(
-                  child: Text(
-                    'Dot product scores: \n$_inputData',
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Output data: $_outputData',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Edit Data'),
-                      content: TextField(
-                        controller: _textEditingController,
-                        onChanged: (value) {
-                          _inputData = value;
-                        },
-                        maxLines: null,
-                      ),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            _saveData(_inputData);
-                          },
-                          child: const Text('Save'),
+        child: _isLoading
+            ? CircularProgressIndicator() // Loading animation widget
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 500,
+                      child: SingleChildScrollView(
+                        child: Text(
+                          'Dot product scores: \n$_inputData',
                         ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: const Text('Edit Data'),
-            ),
-          ],
-        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Output data: $_outputData',
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Edit Data'),
+                            content: TextField(
+                              controller: _textEditingController,
+                              onChanged: (value) {
+                                _inputData = value;
+                              },
+                              maxLines: null,
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  showLoading(); // Show the loading animation
+                                  _saveData(_inputData);
+                                },
+                                child: const Text('Save'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: const Text('Edit Data'),
+                  ),
+                ],
+              ),
       ),
     );
   }

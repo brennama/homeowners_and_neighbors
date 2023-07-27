@@ -1,4 +1,6 @@
-import 'package:homeowners_and_neighborhoods/dot_calculator.dart';
+// ignore_for_file: avoid_print
+
+import 'package:homeowners_and_neighborhoods/utils/dot_calculator.dart';
 
 ParsedData parseData(String inputData) {
   List<List<int>> setN = [];
@@ -71,12 +73,11 @@ String printDotProducts(String inputData) {
     for (int j = 0; j < setH.length; j++) {
       try {
         int result = calculateDotProduct(setN[i], setH[j]);
-        String preference =
-            preferences[j] ?? ''; // Use empty string if preference is null
+        String preference = preferences[j];
         String line = "Dot Product for N$i and H$j $result $preference";
         print(
             line); // Print the line if you still want to see it in the console
-        output += line + '\n'; // Add the line to the output string
+        output += '$line\n'; // Add the line to the output string
       } catch (e) {
         print(e.toString());
       }
