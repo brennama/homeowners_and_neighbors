@@ -59,11 +59,13 @@ List<String> extractPreferences(String inputData) {
   return preferences;
 }
 
-void printDotProducts(String inputData) {
+String printDotProducts(String inputData) {
   final ParsedData parsedData = parseData(inputData);
   final List<List<int>> setN = parsedData.setN;
   final List<List<int>> setH = parsedData.setH;
   final List<String> preferences = extractPreferences(inputData);
+
+  String output = ''; // Initialize an empty string to store the processed data
 
   for (int i = 0; i < setN.length; i++) {
     for (int j = 0; j < setH.length; j++) {
@@ -71,10 +73,15 @@ void printDotProducts(String inputData) {
         int result = calculateDotProduct(setN[i], setH[j]);
         String preference =
             preferences[j] ?? ''; // Use empty string if preference is null
-        print("Dot Product for N$i and H$j $result $preference");
+        String line = "Dot Product for N$i and H$j $result $preference";
+        print(
+            line); // Print the line if you still want to see it in the console
+        output += line + '\n'; // Add the line to the output string
       } catch (e) {
         print(e.toString());
       }
     }
   }
+
+  return output; // Return the processed data as a string
 }

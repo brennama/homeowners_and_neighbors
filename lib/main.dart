@@ -45,8 +45,10 @@ class _HomeownersAppState extends State<HomeownersApp> {
   }
 
   Future<void> _loadData() async {
-    // Read input data from input.txt
-    _inputData = await widget.storage.readInput();
+    // Use _inputData from printDotProducts instead of reading input data from input.txt
+    String inputData = await widget.storage.readInput();
+    _inputData = printDotProducts(inputData);
+
     _textEditingController.text = _inputData;
 
     // Calculate the output data
@@ -91,7 +93,7 @@ class _HomeownersAppState extends State<HomeownersApp> {
                 height: 500,
                 child: SingleChildScrollView(
                   child: Text(
-                    'Input data: \n$_inputData',
+                    'Dot product scores: \n$_inputData',
                   ),
                 ),
               ),
