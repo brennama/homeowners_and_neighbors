@@ -19,6 +19,13 @@ final List<String> result = [];
 //update this to be data read from file,
 
 String assignHomeowners(String input, double maxHomeowners) {
+  result.clear(); // Clear the result list at the beginning of the function
+
+  if (input.isEmpty) {
+    // If input data is empty, return empty output
+    return '';
+  }
+
   List<DotProductData> data = parseDotProductData(input);
 
   // Sort the data list by the highest dot product number

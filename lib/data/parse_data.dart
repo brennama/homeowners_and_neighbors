@@ -50,7 +50,7 @@ void parseInput(String input) {
 Neighborhood parseNeighborhood(String data) {
   final parts = data.split(' ');
   final id = parts[0];
-  final scores = Map<String, int>();
+  final scores = <String, int>{};
   for (int i = 1; i < parts.length; i++) {
     final keyValuePair = parts[i].split(':');
     final key = keyValuePair[0];
@@ -63,7 +63,7 @@ Neighborhood parseNeighborhood(String data) {
 HomeBuyer parseHomeBuyer(String data) {
   final parts = data.split(' ');
   final id = parts[0];
-  final goals = Map<String, int>();
+  final goals = <String, int>{};
   final preferences = parts.last.split('>');
   for (int i = 1; i < parts.length - 1; i++) {
     final keyValuePair = parts[i].split(':');
