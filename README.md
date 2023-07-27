@@ -23,3 +23,9 @@ for neighborhood. Home buyer lines also contain neighborhood preferences separat
 symbol indicating that the neighborhood to the left is more preferred than the one to the right. So "AC
 Capehart" is a high-goal home buyer that prefers Belmont Acres and might show up like this:
 H H9 E:10 W:6 R:8 N1>N2>N3
+
+
+
+
+https://github.com/brennama/homeowners_and_neighbors/assets/76831663/24bffbbf-ea81-4ff2-a97d-8b46e081e76b
+
