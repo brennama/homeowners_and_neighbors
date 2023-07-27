@@ -28,7 +28,7 @@ void main() {
     for (int j = 0; j < setH.length; j++) {
       try {
         int result = calculateDotProduct(setN[i], setH[j]);
-        print("Dot Product for N$i and H$j: $result");
+        print("Dot Product for N$i and H$j $result");
       } catch (e) {
         print(e.toString());
       }
